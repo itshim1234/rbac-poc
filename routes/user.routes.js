@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {updateUser} = require('../controllers/user.controller');
+
 const { authorizeRole } = require('../middleware/rbac.middleware');
 const { checkDepartmentAccess } = require('../middleware/abac.middleware');
 
@@ -52,6 +53,7 @@ router.post("/sendotp", sendotp)
 //    - The `checkDepartmentAccess` middleware handles the department check.
 router.put(
   '/:userId', 
+  auth,
   authorizeRole(['admin', 'manager']), 
   checkDepartmentAccess('profile'), // Checks if manager is in the same department as the profile
   updateUser

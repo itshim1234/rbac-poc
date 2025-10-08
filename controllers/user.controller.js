@@ -1,3 +1,4 @@
+const User = require("../models/User");
 
 
 
@@ -12,6 +13,8 @@
 const updateUser = async (req, res) => {
   const userId = req.params.userId;
   const updates = req.body;
+
+
   
   // LOGIC: At this point, the user is GUARANTEED to be:
   // 1. An 'admin', OR
@@ -24,6 +27,7 @@ const updateUser = async (req, res) => {
     }
     res.json(updatedUser);
   } catch (error) {
+    console.log("error",error)
     res.status(500).json({ message: 'Error updating user' });
   }
 };

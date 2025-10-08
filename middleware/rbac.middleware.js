@@ -5,6 +5,7 @@ const authorizeRole=(requiredRoles)=>{
     
     return(req,res,next)=>{
            // ASSUMPTION: req.user is populated by a prior authentication middleware (e.g., from a JWT)
+       //     console.log("req.user",req)
     const userRole = req.user.role;
 
     if(!userRole || !requiredRoles.includes(userRole)){

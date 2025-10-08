@@ -3,10 +3,13 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB=require("./config/db")
 const userRoutes = require("./routes/user.routes");
+
+const cookieParser=require("cookie-parser")
 const app = express();
 
 // ✅ Middleware
 app.use(express.json());
+app.use(cookieParser());
 
 // ✅ Allow CORS from your React frontend
 app.use(
@@ -39,7 +42,7 @@ app.post("/api/v1/create", (req, res) => {
 
 app.use("/api/v1",userRoutes)
 
-const PORT = 4000;
+const PORT = 4001;
 
 (async () => {
   try {

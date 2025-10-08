@@ -1,5 +1,8 @@
 // 2. ABAC Check (Role + Department Attribute)
 
+const User = require("../models/User");
+
+
 
 const checkDepartmentAccess=(resourceKey)=>{
     return(req,res,next)=>{
@@ -24,7 +27,7 @@ const checkDepartmentAccess=(resourceKey)=>{
       const profileToEditId = req.params.userId; 
           
        // *** MOCK: In a real app, you would fetch the user by ID
-           const profileToEdit = { userId: profileToEditId, department: 'HR' };
+           const profileToEdit = User.findOne({_id:profileToEditId})
            
            if(user.role ==='manager'){
            if(profileToEdit.department===user.department){

@@ -53,3 +53,5 @@ OTPSchema.post("save", function (doc) {
 const OTP = mongoose.model("OTP", OTPSchema);
 
 module.exports = OTP;
+
+
