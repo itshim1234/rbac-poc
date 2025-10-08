@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const {updateUser} = require('../controllers/user.controller');
 
-const { authorizeRole } = require('../middleware/rbac.middleware');
-const { checkDepartmentAccess } = require('../middleware/abac.middleware');
+const { authorize } = require('../middleware/rbac.middleware');
+const {  attachResource } = require('../middleware/abac.middleware');
+
 
 
 
@@ -23,7 +24,8 @@ const {
 } = require("../controllers/auth.controller")
 
 
-const { auth } = require("../middleware/auth.middleware")
+const { auth } = require("../middleware/auth.middleware");
+const { PERMISSIONS } = require('../config/permissions');
 
 // Routes for Login, Signup, and Authentication
 
@@ -40,23 +42,34 @@ router.post("/signup", signup)
 // Route for sending OTP to the user's email
 router.post("/sendotp", sendotp)
 
+// TEAM_UPDATE_MEMBER
 
-// 1. RBAC ONLY: Only an 'admin' can view the list of ALL users
-// router.get(
-//   '/', 
-//   authorizeRole(['admin']), 
-//   userController.getAllUsers
-// );
 
-// 2. RBAC + ABAC: Only 'admin' or 'manager' can edit a profile.
-//    - The `authorizeRole` middleware handles the basic role check.
-//    - The `checkDepartmentAccess` middleware handles the department check.
 router.put(
   '/:userId', 
   auth,
-  authorizeRole(['admin', 'manager']), 
-  checkDepartmentAccess('profile'), // Checks if manager is in the same department as the profile
+attachResource,authorize(PERMISSIONS.TEAM_UPDATE_MEMBER),
   updateUser
 );
+
+
+// router.post("/:id/approve", userAuth, attachTaskResource, authorize([
+//   PERMISSIONS.TASK_APPROVE,
+//   PERMISSIONS.APPROVAL_REVIEW
+// ]), (req, res) => {
+//   // user can approve and review tasks
+//   res.json({ message: "Task approved successfully" });
+// });
+
+// router.get("/:id", userAuth, (req, res, next) => {
+//   const project = projects.find(p => p.id === req.params.id);
+//   if (!project) return res.status(404).json({ message: "Project not found" });
+
+//   req.resource = project; // attach resource for ABAC
+//   next();
+// }, authorize(PERMISSIONS.PROJECT_READ), (req, res) => {
+//   res.json({ project: req.resource });
+// });
+
 
 module.exports = router;
